@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">Bluetooth_BLE</string>
+    <string name="ble_not_supported">设备不支持蓝牙ble</string>
+    <string name="ble_supported">设备支持蓝牙ble</string>
+</resources>

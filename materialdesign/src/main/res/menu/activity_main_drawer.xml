@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group
+        android:checkableBehavior="single">
+        <item android:title="@string/home" android:icon="@mipmap/ic_launcher"/>
+        <item android:title="@string/keep" android:icon="@mipmap/ic_launcher"/>
+    </group>
+    <group android:checkableBehavior="none">
+        <item android:title="@string/setting" android:icon="@mipmap/ic_launcher"/>
+        <item android:title="@string/about" android:icon="@mipmap/ic_launcher"/>
+    </group>
+</menu>

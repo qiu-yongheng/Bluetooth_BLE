@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">BleLib</string>
+    <string name="ble_not_supported">设备不支持蓝牙BLE</string>
+    <string name="ble_supported">设备支持蓝牙BLE</string>
+</resources>

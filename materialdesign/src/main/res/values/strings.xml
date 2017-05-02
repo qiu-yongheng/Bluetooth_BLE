@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Material Design</string>
+    <string name="home">首页</string>
+    <string name="keep">收藏</string>
+    <string name="setting">设置</string>
+    <string name="about">关于</string>
+    <string name="close">关闭</string>
+    <string name="open">打开</string>
+</resources>
