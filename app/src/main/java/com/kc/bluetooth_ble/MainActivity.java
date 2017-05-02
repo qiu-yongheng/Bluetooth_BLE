@@ -33,6 +33,9 @@ import java.util.List;
 import static com.kc.bluetooth_ble.R.id.tv_break;
 import static com.kc.bluetooth_ble.R.id.tv_heartbeat;
 
+/**
+ * asdfasdfasdfasdfasdfasdf
+ */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
