@@ -157,11 +157,20 @@ public class BleManager {
      * @param chara   特征码
      * @return
      */
-    public boolean WriteCharX(UUID service, UUID chara, UUID desc) {
+    public boolean writeCharX(UUID service, UUID chara, UUID desc) {
         BluetoothGattCharacteristic characteristic = mGatt.getService(service).getCharacteristic(chara);
         BluetoothGattDescriptor descriptor = characteristic.getDescriptor(desc);
         descriptor.setValue(BluetoothGattDescriptor.ENABLE_NOTIFICATION_VALUE);
         return mGatt.writeDescriptor(descriptor);
+    }
+
+    public boolean writeCharX(UUID service, UUID chara, byte[] writeValue) {
+        BluetoothGattCharacteristic characteristic = mGatt.getService(service).getCharacteristic(chara);
+        if (characteristic != null) {
+            characteristic.setValue(writeValue);
+            return mGatt.writeCharacteristic(characteristic);
+        }
+        return false;
     }
 
     /**
@@ -171,7 +180,7 @@ public class BleManager {
      * @param writeValue
      * @return
      */
-    public boolean WriteCharX(BluetoothGattCharacteristic GattCharacteristic, byte[] writeValue) {
+    public boolean writeCharX(BluetoothGattCharacteristic GattCharacteristic, byte[] writeValue) {
         if (GattCharacteristic != null) {
             GattCharacteristic.setValue(writeValue);
             return mGatt.writeCharacteristic(GattCharacteristic);

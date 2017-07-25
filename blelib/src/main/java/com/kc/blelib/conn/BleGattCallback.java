@@ -52,7 +52,7 @@ public abstract class BleGattCallback extends BluetoothGattCallback {
         if (newState == BluetoothProfile.STATE_CONNECTED) {
             Log.i(TAG, "连接成功 onConnectionSuccess");
             BleManager.connectionState = Constant.STATE_CONNECTED;
-            //开始搜索service
+            /** 第一步: 开始搜索service */
             gatt.discoverServices();
 
             // 增加读rssi 的定时器
@@ -83,6 +83,7 @@ public abstract class BleGattCallback extends BluetoothGattCallback {
         }
     }
 
+
     /**
      * 相当于一个监听器, 当蓝牙设备有数据返回时执行
      *
@@ -102,7 +103,7 @@ public abstract class BleGattCallback extends BluetoothGattCallback {
 
     /**
      * 服务被发现
-     *
+     * 可以给特征符写入数据, 发送给BLE终端
      * @param gatt
      * @param status
      */

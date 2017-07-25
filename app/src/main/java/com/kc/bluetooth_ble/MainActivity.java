@@ -18,6 +18,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,12 +30,14 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 import static com.kc.bluetooth_ble.R.id.tv_break;
 import static com.kc.bluetooth_ble.R.id.tv_heartbeat;
 
 /**
  * asdfasdfasdfasdfasdfasdf
+ * 新的提交
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR2)
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -72,6 +75,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private BleManager bleManager;
     private Pulse_Sensor pulse_sensor;
     private TextView mTv_break;
+    private Button mBtn_send;
+    private EditText mEt_chara;
 
 
     @Override
@@ -99,6 +104,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBtn_conn.setOnClickListener(this);
         mBtn_excel.setOnClickListener(this);
         mBtn_clean.setOnClickListener(this);
+        mBtn_send.setOnClickListener(this);
     }
 
     private void initView() {
@@ -109,6 +115,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mBtn_clean = (Button) findViewById(R.id.btn_clean);
         mTv_hearbeat = (TextView) findViewById(tv_heartbeat);
         mTv_break = (TextView) findViewById(tv_break);
+        mBtn_send = (Button) findViewById(R.id.btn_send);
+        mEt_chara = (EditText) findViewById(R.id.et_chara);
     }
 
     private void init() {
@@ -152,7 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 bleManager.connectDevice(mBlueDevices.get(0), false, new BleGattCallback(this) {
                     /**
-                     * 蓝牙终端被读时回调
+                     * 2. 蓝牙终端被读时回调
                      * @param gatt
                      * @param characteristic
                      * @param status
@@ -164,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                     /**
-                     * 刷新特征码时, 返回数据
+                     * 2. 刷新特征码时, 返回数据
                      * @param gatt
                      * @param characteristic
                      */
@@ -188,7 +196,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     }
 
                     /**
-                     * 服务连接成功, 开始对特征码进行获取数据操作
+                     * 1. 服务连接成功, 开始对特征码进行获取数据操作
                      * @param gatt
                      * @param status
                      */
@@ -196,19 +204,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     public void onServiceConnectSuccess(BluetoothGatt gatt, int status) {
                         List<BluetoothGattService> services = gatt.getServices();
                         for (BluetoothGattService service : services) {
+                            Log.d("==", "service = " + service.getUuid());
                             List<BluetoothGattCharacteristic> characteristics = service.getCharacteristics();
                             for (BluetoothGattCharacteristic characteristic : characteristics) {
-                                Log.d("==", "uuid = " + characteristic.getUuid());
-                                if (characteristic.getUuid().toString().equals("00002a37-0000-1000-8000-00805f9b34fb")) {
-                                    //请求获取数据
-                                    bleManager.setCharacteristicNotification(characteristic, true);
-                                }
+                                Log.d("==", "characteristic = " + characteristic.getUuid());
+//                                if (characteristic.getUuid().toString().equals("00002a37-0000-1000-8000-00805f9b34fb")) {
+//                                    Toast.makeText(MainActivity.this, "00002a37", Toast.LENGTH_SHORT).show();
+//                                    //请求获取数据
+//                                    bleManager.setCharacteristicNotification(characteristic, true);
+//                                }
 //                                if (characteristic.getUuid().toString().equals("0000fff2-0000-1000-8000-00805f9b34fb")) {
+//                                    Toast.makeText(MainActivity.this, "0000fff2", Toast.LENGTH_SHORT).show();
 //                                    bleManager.setCharacteristicNotification(characteristic, true);
 //                                }
 //                                if (characteristic.getUuid().toString().equals("0000fff3-0000-1000-8000-00805f9b34fb")) {
+//                                    Toast.makeText(MainActivity.this, "0000fff3", Toast.LENGTH_SHORT).show();
 //                                    bleManager.setCharacteristicNotification(characteristic, true);
 //                                }
+                                bleManager.setCharacteristicNotification(characteristic, true);
                             }
                         }
                     }
@@ -218,6 +231,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     }
                 });
+                break;
+            case R.id.btn_send:
+                String data = mEt_chara.getText().toString();
+                if (!data.equals("")) {
+                    // service 00001801-0000-1000-8000-00805f9b34fb chara 00002a05-0000-1000-8000-00805f9b34fb
+                    // service 6e400001-b5a3-f393-e0a9-e50e24dcca9e chara 6e400003-b5a3-f393-e0a9-e50e24dcca9e
+                    boolean b = bleManager.writeCharX(UUID.fromString("00001801-0000-1000-8000-00805f9b34fb"), UUID.fromString("6e400003-b5a3-f393-e0a9-e50e24dcca9e"), data.getBytes());
+                    Toast.makeText(this, "发送结果: " + b, Toast.LENGTH_SHORT).show();
+                }
                 break;
             case R.id.btn_excel:
                 initData();

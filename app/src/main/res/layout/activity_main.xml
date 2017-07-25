@@ -21,6 +21,18 @@
         android:text="清除数据"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <EditText
+        android:id="@+id/et_chara"
+        android:hint="输入要发送的特征码"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btn_send"
+        android:text="发送特征码"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
     <TextView
         android:id="@+id/tv"
         android:layout_width="wrap_content"
