@@ -202,6 +202,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                      */
                     @Override
                     public void onServiceConnectSuccess(BluetoothGatt gatt, int status) {
+                        Toast.makeText(MainActivity.this, "蓝牙设备连接成功!", Toast.LENGTH_SHORT).show();
                         List<BluetoothGattService> services = gatt.getServices();
                         for (BluetoothGattService service : services) {
                             Log.d("==", "service = " + service.getUuid());
@@ -228,7 +229,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     @Override
                     public void onConnectFailure(BluetoothGatt gatt, int status) {
-
+                        Toast.makeText(MainActivity.this, "连接失败", Toast.LENGTH_SHORT).show();
                     }
                 });
                 break;

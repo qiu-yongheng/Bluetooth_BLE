@@ -84,6 +84,7 @@ public class BleManager {
     /**
      * 获取对象
      *
+     * @param context
      * @return
      */
     public static BleManager getInstance(Context context) {
@@ -113,7 +114,10 @@ public class BleManager {
     }
 
     /**
-     * 扫描蓝牙设备
+     * 扫描蓝牙设备 (只能搜索BLE设备)
+     *
+     * @param callback 扫描到的BLE设备通过回调返回
+     * @return
      */
     public boolean scanDevice(BleScanCallback callback) {
         callback.stopScanOnTimeout(this); //指定时间后停止扫描
@@ -135,6 +139,11 @@ public class BleManager {
 
     /**
      * 连接蓝牙设备(根据设备)
+     *
+     * @param device      BLE设备
+     * @param autoConnect 自动连接, 一般设置false
+     * @param callback    连接结果回调
+     * @return
      */
     public BluetoothGatt connectDevice(BluetoothDevice device, boolean autoConnect, BleGattCallback callback) {
         mGatt = device.connectGatt(mContext, autoConnect, callback);
@@ -142,7 +151,11 @@ public class BleManager {
     }
 
     /**
-     * 连接蓝牙设备(根据IMEI)
+     * 连接蓝牙设备(根据IMEI地址)
+     *
+     * @param address  IMEI地址
+     * @param callback 连接结果回调
+     * @return
      */
     public BluetoothGatt connectDevice(String address, BleGattCallback callback) {
         BluetoothDevice device = bluetoothAdapter.getRemoteDevice(address);
@@ -151,10 +164,14 @@ public class BleManager {
     }
 
     /**
-     * 向设备写描述码, 请求获取数据
+     * 向描述符中写入 "ENABLE_NOTIFICATION_VALUE", 发送给蓝牙设备, 请求允许获取数据
+     *
+     * 写入后, 还不能获取BLE设备返回的数据, 还需要设置mGatt.setCharacteristicNotification(characteristic, true);
+     *
      *
      * @param service 服务码
      * @param chara   特征码
+     * @param desc    描述符
      * @return
      */
     public boolean writeCharX(UUID service, UUID chara, UUID desc) {
@@ -164,6 +181,16 @@ public class BleManager {
         return mGatt.writeDescriptor(descriptor);
     }
 
+    /**
+     * 向特征码中写入数据, 发送给设备
+     * <p>
+     * 这个方法可以用来实现APP与蓝牙设备进行通讯, 如发送指令给蓝牙设备, 开启蓝牙设备的某些功能
+     *
+     * @param service    服务码
+     * @param chara      特征码
+     * @param writeValue 需要发送给蓝牙设备的数据
+     * @return
+     */
     public boolean writeCharX(UUID service, UUID chara, byte[] writeValue) {
         BluetoothGattCharacteristic characteristic = mGatt.getService(service).getCharacteristic(chara);
         if (characteristic != null) {
@@ -174,7 +201,7 @@ public class BleManager {
     }
 
     /**
-     * 向设备写描述码, 不能获取数据(应该在descriptor中写)
+     * 向设备写描述码, 不能获取数据(TODO 应该在descriptor中写, 当前还未明确, 需修改)
      *
      * @param GattCharacteristic
      * @param writeValue
@@ -189,9 +216,9 @@ public class BleManager {
     }
 
     /**
-     * 读取特征码写入的值
+     * 读取特征码写入的值 (并不是读取BLE设备返回的数据, 是读取发送给BLE设备的数据)
      *
-     * @param GattCharacteristic
+     * @param GattCharacteristic 特征码
      */
     public boolean ReadCharX(BluetoothGattCharacteristic GattCharacteristic) {
         if (GattCharacteristic != null) {
@@ -201,11 +228,13 @@ public class BleManager {
     }
 
     /**
-     * 刷新返回的数据
+     * 请求BLE设备获取数据
+     * mGatt.setCharacteristicNotification(characteristic, true) 设置允许接收BLE设备返回的数据
      *
-     * @param service
-     * @param chara
-     * @return
+     * @param service 服务码
+     * @param chara 特征码
+     * @param desc
+     * @param enable
      */
     public void setCharacteristicNotification(UUID service, UUID chara, UUID desc, boolean enable) {
         BluetoothGattCharacteristic characteristic = mGatt.getService(service).getCharacteristic(chara);
